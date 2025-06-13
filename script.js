@@ -1,3 +1,4 @@
+
 let pyodide = null;
 
 const status = document.getElementById("status");
@@ -10,17 +11,14 @@ const zipButton = document.getElementById("download-zip");
 const downloadsTable = document.getElementById("downloads-table");
 const previewContainer = document.getElementById("preview-container");
 const previewCanvas = document.getElementById("preview-canvas");
-const preserveNameCheckbox = document.getElementById("preserve-name");
 
 let currentPdfData = null;
 let currentPdfDoc = null;
 let previewTask = null;
-let originalFilename = "";
 
 fileInput.addEventListener("change", () => {
   const file = fileInput.files[0];
   if (file) {
-    originalFilename = file.name.replace(/\.pdf$/i, "").replace(/[^a-zA-Z0-9_\-]/g, '_');
     fileInfo.textContent = `Выбран файл: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} МБ)`;
   } else {
     fileInfo.textContent = "";
@@ -90,17 +88,13 @@ async function processPDF() {
   updateProgress(90);
   downloadsTable.innerHTML = "";
   const pageCount = pyodide.runPython("len(reader.pages)");
-  // const preserveName = preserveNameCheckbox.checked;
-  const preserveName = false;
-
 
   zipButton.style.display = "inline-block";
   zipButton.onclick = async () => {
     const zip = new JSZip();
     for (let i = 1; i <= pageCount; i++) {
       const data = pyodide.FS.readFile(`pages/page_${i}.pdf`);
-      const filename = preserveName ? `${originalFilename}_page_${i}.pdf` : `page_${i}.pdf`;
-      zip.file(filename, data);
+      zip.file(`page_${i}.pdf`, data);
     }
     const blob = await zip.generateAsync({ type: "blob" });
     const url = URL.createObjectURL(blob);
@@ -123,7 +117,7 @@ async function processPDF() {
         const blob = new Blob([data], { type: "application/pdf" });
         const url = URL.createObjectURL(blob);
 
-        const filename = preserveName ? `${originalFilename}_page_${pageNum}.pdf` : `page_${pageNum}.pdf`;
+        const filename = `page_${pageNum}.pdf`;
 
         const link = document.createElement("a");
         link.href = url;
