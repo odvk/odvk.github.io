@@ -30,12 +30,11 @@ body {
 }
 #preview-canvas {
   max-width: 388px;
-  max-height: 517px;
-  width: auto;
+  width: 100%;
   height: auto;
   display: block;
-  object-fit: contain;
 }
+
 #preview-container {
   position: absolute;
   background: white;
