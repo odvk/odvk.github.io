@@ -4,53 +4,15 @@ body {
   padding: 2em;
   background: #f9f9f9;
 }
-input[type="file"] {
-  margin-top: 1em;
-  font-size: 1em;
-  width: 80%;
-  max-width: 600px;
-}
-button {
-  margin-top: 1em;
-  font-size: 1em;
-  padding: 0.6em 1.2em;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-#progress-bar-container {
-  width: 80%;
-  max-width: 600px;
-  margin: 1em auto;
-  background: #ddd;
-  border-radius: 5px;
-  overflow: hidden;
-  height: 10px;
-  display: none;
-}
-#progress-bar {
-  height: 100%;
-  width: 0%;
-  background: #4CAF50;
-  transition: width 0.3s ease;
-}
-#downloads {
-  max-width: 90%;
-  margin: 1em auto;
-}
 #downloads-table-wrapper {
-  max-height: 500px;
+  max-height: 400px;
   overflow-y: auto;
   border: 1px solid #ccc;
   border-radius: 6px;
   background-color: #fdfdfd;
   padding: 1em;
+  max-width: 95%;
+  margin: 0 auto;
 }
 #downloads-table {
   width: 100%;
@@ -61,21 +23,11 @@ button:disabled {
   padding: 0.3em 0.5em;
   text-align: left;
   word-break: break-word;
-  font-size: 0.9em;
 }
 #downloads-table a {
   text-decoration: none;
   color: #1a0dab;
 }
-#preview-container {
-  position: absolute;
-  border: 1px solid #888;
-  background: #fff;
-  padding: 5px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  z-index: 100;
-}
-
 #preview-canvas {
   width: 388px;
   height: 517px;
@@ -83,4 +35,12 @@ button:disabled {
   max-height: 100%;
   display: block;
   object-fit: contain;
+}
+#preview-container {
+  position: absolute;
+  background: white;
+  border: 1px solid #888;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  display: none;
+  z-index: 100;
 }
