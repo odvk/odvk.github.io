@@ -11,21 +11,16 @@
 
   <p id="status">⌛ Загружаем инструменты... Пожалуйста, подождите.</p>
 
-  <!-- Загрузка файла -->
   <input type="file" id="file-input" accept="application/pdf" />
   <br />
-  <!-- Кнопка запуска -->
   <button id="split-button" onclick="processPDF()" disabled>Разбить PDF</button>
 
-  <!-- Информация о выбранном файле -->
   <p id="file-info" style="font-style: italic; color: #555;"></p>
 
-  <!-- Прогресс-бар -->
-  <div id="progress-bar-container" style="display: none; margin-top: 1em;">
+  <div id="progress-bar-container">
     <div id="progress-bar"></div>
   </div>
 
-  <!-- Ссылки на страницы -->
   <div id="downloads"></div>
 
   <script src="script.js"></script>
