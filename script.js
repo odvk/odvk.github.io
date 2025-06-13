@@ -169,6 +169,9 @@ function movePreview(event) {
   const previewHeight = previewContainer.offsetHeight || 517;
   const padding = 20;
 
+  // ⬅️ Ограничиваем максимальную ширину предпросмотра, чтобы canvas не сжимался
+  previewContainer.style.maxWidth = "388px";
+
   let top;
   if (event.clientY + padding + previewHeight > window.innerHeight) {
     top = event.clientY - previewHeight - padding;
@@ -186,6 +189,7 @@ function movePreview(event) {
   previewContainer.style.top = `${top}px`;
   previewContainer.style.left = `${left}px`;
 }
+
 
 
 function hidePreview() {
