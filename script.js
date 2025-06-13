@@ -6,6 +6,7 @@ const fileInput = document.getElementById("file-input");
 const fileInfo = document.getElementById("file-info");
 const progressBar = document.getElementById("progress-bar");
 const progressBarContainer = document.getElementById("progress-bar-container");
+const downloads = document.getElementById("downloads");
 
 fileInput.addEventListener("change", () => {
   const file = fileInput.files[0];
@@ -71,10 +72,31 @@ async function processPDF() {
 
   updateProgress(90);
 
-  const downloads = document.getElementById("downloads");
   downloads.innerHTML = "";
+
   const pageCount = pyodide.runPython("len(reader.pages)");
 
+  // ZIP-кнопка
+  const zipButton = document.createElement("button");
+  zipButton.textContent = "📦 Скачать всё ZIP";
+  zipButton.style.marginBottom = "1em";
+  zipButton.onclick = async () => {
+    const zip = new JSZip();
+    for (let i = 1; i <= pageCount; i++) {
+      const data = pyodide.FS.readFile(`pages/page_${i}.pdf`);
+      zip.file(`page_${i}.pdf`, data);
+    }
+    const blob = await zip.generateAsync({ type: "blob" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "pdf_pages.zip";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+  downloads.appendChild(zipButton);
+
+  // Ссылки на отдельные страницы
   for (let i = 1; i <= pageCount; i++) {
     const data = pyodide.FS.readFile(`pages/page_${i}.pdf`);
     const blob = new Blob([data], { type: "application/pdf" });
