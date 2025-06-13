@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Разделить PDF по страницам</title>
-  <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+  <script src="https://https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -11,14 +11,21 @@
 
   <p id="status">⌛ Загружаем инструменты... Пожалуйста, подождите.</p>
 
-  <!-- Ввод файла -->
+  <!-- Загрузка файла -->
   <input type="file" id="file-input" accept="application/pdf" />
-
-  <!-- Кнопка теперь под полем -->
   <br />
+  <!-- Кнопка запуска -->
   <button id="split-button" onclick="processPDF()" disabled>Разбить PDF</button>
 
-  <!-- Список ссылок -->
+  <!-- Информация о выбранном файле -->
+  <p id="file-info" style="font-style: italic; color: #555;"></p>
+
+  <!-- Прогресс-бар -->
+  <div id="progress-bar-container" style="display: none; margin-top: 1em;">
+    <div id="progress-bar"></div>
+  </div>
+
+  <!-- Ссылки на страницы -->
   <div id="downloads"></div>
 
   <script src="script.js"></script>
