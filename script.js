@@ -1,3 +1,4 @@
+let previewTask = null;
 let pyodide = null;
 
 const status = document.getElementById("status");
@@ -129,6 +130,7 @@ async function processPDF() {
 
 function showPreview(pageNumber, event) {
   pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+
   const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(currentPdfData) });
   loadingTask.promise.then(pdf => {
     pdf.getPage(pageNumber).then(page => {
@@ -137,13 +139,21 @@ function showPreview(pageNumber, event) {
       previewCanvas.height = viewport.height;
       previewCanvas.width = viewport.width;
 
+      // Отменяем предыдущую отрисовку, если есть
+      if (previewTask) {
+        previewTask.cancel();
+      }
+
       const renderContext = {
         canvasContext: context,
         viewport: viewport
       };
-      page.render(renderContext);
-      previewContainer.style.display = "block";
-      movePreview(event);
+
+      previewTask = page.render(renderContext);
+      previewTask.promise.then(() => {
+        previewContainer.style.display = "block";
+        movePreview(event);
+      });
     });
   });
 }
@@ -154,5 +164,9 @@ function movePreview(event) {
 }
 
 function hidePreview() {
+  if (previewTask) {
+    previewTask.cancel();
+    previewTask = null;
+  }
   previewContainer.style.display = "none";
 }
