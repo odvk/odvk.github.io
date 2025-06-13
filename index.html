@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PDF Splitter</title>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>📄 Разделить PDF на страницы</h1>
+  <input type="file" id="file-input" accept="application/pdf" />
+  <button onclick="processPDF()">Разбить PDF</button>
+  <p id="status"></p>
+  <div id="downloads"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
