@@ -2,9 +2,54 @@ body {
   font-family: sans-serif;
   text-align: center;
   padding: 2em;
+  background: #f9f9f9;
 }
 
-input, button {
+input[type="file"] {
   margin-top: 1em;
   font-size: 1em;
+  width: 80%;
+  max-width: 600px;
+}
+
+button {
+  margin-top: 1em;
+  font-size: 1em;
+  padding: 0.6em 1.2em;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+#downloads a {
+  display: block;
+  margin: 5px auto;
+  word-wrap: break-word;
+  white-space: normal;
+  font-size: 0.95em;
+  max-width: 90%;
+}
+
+#progress-bar-container {
+  width: 80%;
+  max-width: 600px;
+  margin: auto;
+  background: #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  height: 10px;
+}
+
+#progress-bar {
+  height: 100%;
+  width: 0%;
+  background: #4CAF50;
+  transition: width 0.3s ease;
 }
