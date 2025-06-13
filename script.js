@@ -165,6 +165,7 @@ function showPreview(pageNumber, event) {
 }
 
 function movePreview(event) {
+  const previewWidth = previewContainer.offsetWidth || 388;
   const previewHeight = previewContainer.offsetHeight || 517;
   const padding = 20;
 
@@ -176,9 +177,16 @@ function movePreview(event) {
     top = event.clientY + padding;
   }
 
+  let left = event.clientX + padding;
+  if (left + previewWidth > window.innerWidth) {
+    left = event.clientX - previewWidth - padding;
+    if (left < 0) left = 0;
+  }
+
   previewContainer.style.top = `${top}px`;
-  previewContainer.style.left = `${event.clientX + padding}px`;
+  previewContainer.style.left = `${left}px`;
 }
+
 
 function hidePreview() {
   if (previewTask) {
