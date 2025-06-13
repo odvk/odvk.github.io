@@ -143,7 +143,7 @@ function showPreview(pageNumber, event) {
   }
 
   currentPdfDoc.getPage(pageNumber).then(page => {
-    const viewport = page.getViewport({ scale: 0.5 });
+    const viewport = page.getViewport({ scale: 1.3 }); // не важно, т.к. CSS масштабирует
     const context = previewCanvas.getContext("2d");
     previewCanvas.height = viewport.height;
     previewCanvas.width = viewport.width;
@@ -155,21 +155,25 @@ function showPreview(pageNumber, event) {
     previewTask = page.render(renderContext);
     previewTask.promise.then(() => {
       previewContainer.style.display = "block";
-      movePreview(event);
+
+      // ⏳ Подождать, пока DOM отобразит preview, чтобы offsetHeight стал точным
+      requestAnimationFrame(() => movePreview(event));
     }).catch(() => {});
   });
 }
+
 
 function movePreview(event) {
   const previewHeight = previewContainer.offsetHeight || 517;
   const padding = 20;
 
-  let top = (event.clientY + padding + previewHeight > window.innerHeight)
-    ? event.clientY - previewHeight - padding
-    : event.clientY + padding;
-
-  // 💡 Не дать предпросмотру уйти вверх за экран
-  if (top < 0) top = 0;
+  let top;
+  if (event.clientY + padding + previewHeight > window.innerHeight) {
+    top = event.clientY - previewHeight - padding;
+    if (top < 0) top = 0;
+  } else {
+    top = event.clientY + padding;
+  }
 
   previewContainer.style.top = `${top}px`;
   previewContainer.style.left = `${event.clientX + padding}px`;
