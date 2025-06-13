@@ -75,3 +75,11 @@ button:disabled {
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
   z-index: 100;
 }
+
+#preview-canvas {
+  max-width: 300px;
+  max-height: 400px;
+  width: auto;
+  height: auto;
+  display: block;
+}
