@@ -9,7 +9,6 @@
 </head>
 <body>
   <h1>📄 Разделить PDF на страницы</h1>
-
   <p id="status">⌛ Загружаем инструменты... Пожалуйста, подождите.</p>
 
   <input type="file" id="file-input" accept="application/pdf" />
@@ -17,15 +16,38 @@
   <button id="split-button" onclick="processPDF()" disabled>Разбить PDF</button>
 
   <p id="file-info" style="font-style: italic; color: #555;"></p>
-
-  <div id="progress-bar-container">
-    <div id="progress-bar"></div>
-  </div>
+  <div id="progress-bar-container"><div id="progress-bar"></div></div>
 
   <div id="downloads">
-    <button id="download-zip" style="display: none; margin-bottom: 1em;">📦 Скачать всё ZIP</button>
+    <button id="download-zip" style="display: none; margin-bottom: 1em;">📁 Скачать всё ZIP</button>
+    <div id="downloads-table-wrapper">
+      <table id="downloads-table"></table>
+    </div>
   </div>
 
   <script src="script.js"></script>
+  <style>
+    #downloads-table-wrapper {
+      max-height: 500px;
+      overflow-y: auto;
+      margin: 1em auto;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #fdfdfd;
+      padding: 1em;
+      max-width: 90%;
+    }
+    #downloads-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    #downloads-table td {
+      padding: 0.5em 1em;
+      text-align: left;
+    }
+    #downloads-table a {
+      text-decoration: none;
+    }
+  </style>
 </body>
 </html>
