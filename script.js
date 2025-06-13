@@ -90,7 +90,9 @@ async function processPDF() {
   updateProgress(90);
   downloadsTable.innerHTML = "";
   const pageCount = pyodide.runPython("len(reader.pages)");
-  const preserveName = preserveNameCheckbox.checked;
+  // const preserveName = preserveNameCheckbox.checked;
+  const preserveName = false;
+
 
   zipButton.style.display = "inline-block";
   zipButton.onclick = async () => {
