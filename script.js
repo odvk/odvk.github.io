@@ -128,7 +128,8 @@ async function processPDF() {
 }
 
 function showPreview(pageNumber, event) {
-  const loadingTask = pdfjsLib.getDocument({ data: currentPdfData });
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+  const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(currentPdfData) });
   loadingTask.promise.then(pdf => {
     pdf.getPage(pageNumber).then(page => {
       const viewport = page.getViewport({ scale: 0.5 });
