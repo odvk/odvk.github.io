@@ -8,12 +8,17 @@
 </head>
 <body>
   <h1>📄 Разделить PDF на страницы</h1>
-  
+
   <p id="status">⌛ Загружаем инструменты... Пожалуйста, подождите.</p>
 
+  <!-- Ввод файла -->
   <input type="file" id="file-input" accept="application/pdf" />
+
+  <!-- Кнопка теперь под полем -->
+  <br />
   <button id="split-button" onclick="processPDF()" disabled>Разбить PDF</button>
 
+  <!-- Список ссылок -->
   <div id="downloads"></div>
 
   <script src="script.js"></script>
