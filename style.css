@@ -77,8 +77,8 @@ button:disabled {
 }
 
 #preview-canvas {
-  max-width: 300px;
-  max-height: 400px;
+  max-width: 340px;
+  max-height: 455px;
   width: auto;
   height: auto;
   display: block;
