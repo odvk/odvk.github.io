@@ -1,4 +1,3 @@
-let previewTask = null;
 let pyodide = null;
 
 const status = document.getElementById("status");
@@ -11,7 +10,10 @@ const zipButton = document.getElementById("download-zip");
 const downloadsTable = document.getElementById("downloads-table");
 const previewContainer = document.getElementById("preview-container");
 const previewCanvas = document.getElementById("preview-canvas");
+
 let currentPdfData = null;
+let currentPdfDoc = null;
+let previewTask = null;
 
 fileInput.addEventListener("change", () => {
   const file = fileInput.files[0];
@@ -59,6 +61,11 @@ async function processPDF() {
   const arrayBuffer = await file.arrayBuffer();
   currentPdfData = arrayBuffer;
   pyodide.FS.writeFile("input.pdf", new Uint8Array(arrayBuffer));
+
+  // Загружаем pdf.js документ заранее
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+  const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(currentPdfData) });
+  currentPdfDoc = await loadingTask.promise;
 
   status.textContent = "⚙️ Обработка файла...";
   updateProgress(20);
@@ -129,32 +136,27 @@ async function processPDF() {
 }
 
 function showPreview(pageNumber, event) {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+  if (!currentPdfDoc) return;
+  if (previewTask) {
+    previewTask.cancel();
+    previewTask = null;
+  }
 
-  const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(currentPdfData) });
-  loadingTask.promise.then(pdf => {
-    pdf.getPage(pageNumber).then(page => {
-      const viewport = page.getViewport({ scale: 0.5 });
-      const context = previewCanvas.getContext("2d");
-      previewCanvas.height = viewport.height;
-      previewCanvas.width = viewport.width;
+  currentPdfDoc.getPage(pageNumber).then(page => {
+    const viewport = page.getViewport({ scale: 0.5 });
+    const context = previewCanvas.getContext("2d");
+    previewCanvas.height = viewport.height;
+    previewCanvas.width = viewport.width;
 
-      // Отменяем предыдущую отрисовку, если есть
-      if (previewTask) {
-        previewTask.cancel();
-      }
-
-      const renderContext = {
-        canvasContext: context,
-        viewport: viewport
-      };
-
-      previewTask = page.render(renderContext);
-      previewTask.promise.then(() => {
-        previewContainer.style.display = "block";
-        movePreview(event);
-      });
-    });
+    const renderContext = {
+      canvasContext: context,
+      viewport: viewport
+    };
+    previewTask = page.render(renderContext);
+    previewTask.promise.then(() => {
+      previewContainer.style.display = "block";
+      movePreview(event);
+    }).catch(() => {});
   });
 }
 
