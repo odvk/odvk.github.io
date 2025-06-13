@@ -77,9 +77,10 @@ button:disabled {
 }
 
 #preview-canvas {
-  max-width: 588px;
-  max-height: 817px;
-  width: auto;
-  height: auto;
+  width: 388px;
+  height: 517px;
+  max-width: 100%;
+  max-height: 100%;
   display: block;
+  object-fit: contain;
 }
