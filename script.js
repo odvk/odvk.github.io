@@ -30,7 +30,7 @@ async function loadPyodideAndPackages() {
     updateProgress(60);
     await pyodide.runPythonAsync(`
       import micropip
-      await micropip.install("PyPDF2")
+      await micropip.install("pypdf")
     `);
     updateProgress(100);
     status.textContent = "✅ Готово! Загрузите PDF для обработки";
@@ -57,7 +57,7 @@ async function processPDF() {
   updateProgress(20);
 
   await pyodide.runPythonAsync(`
-    from PyPDF2 import PdfReader, PdfWriter
+    from pypdf import PdfReader, PdfWriter
     import os
 
     reader = PdfReader("input.pdf")
