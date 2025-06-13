@@ -5,6 +5,7 @@
   <title>Разделить PDF по страницам</title>
   <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -19,35 +20,13 @@
   <div id="progress-bar-container"><div id="progress-bar"></div></div>
 
   <div id="downloads">
-    <button id="download-zip" style="display: none; margin-bottom: 1em;">📁 Скачать всё ZIP</button>
+    <button id="download-zip" style="display: none; margin-bottom: 1em;">📦 Скачать всё ZIP</button>
     <div id="downloads-table-wrapper">
       <table id="downloads-table"></table>
     </div>
   </div>
 
+  <div id="preview-container" style="display: none;"><canvas id="preview-canvas"></canvas></div>
   <script src="script.js"></script>
-  <style>
-    #downloads-table-wrapper {
-      max-height: 500px;
-      overflow-y: auto;
-      margin: 1em auto;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      background-color: #fdfdfd;
-      padding: 1em;
-      max-width: 90%;
-    }
-    #downloads-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    #downloads-table td {
-      padding: 0.5em 1em;
-      text-align: left;
-    }
-    #downloads-table a {
-      text-decoration: none;
-    }
-  </style>
 </body>
 </html>

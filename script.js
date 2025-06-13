@@ -1,4 +1,3 @@
-// script.js
 let pyodide = null;
 
 const status = document.getElementById("status");
@@ -9,6 +8,9 @@ const progressBar = document.getElementById("progress-bar");
 const progressBarContainer = document.getElementById("progress-bar-container");
 const zipButton = document.getElementById("download-zip");
 const downloadsTable = document.getElementById("downloads-table");
+const previewContainer = document.getElementById("preview-container");
+const previewCanvas = document.getElementById("preview-canvas");
+let currentPdfData = null;
 
 fileInput.addEventListener("change", () => {
   const file = fileInput.files[0];
@@ -54,6 +56,7 @@ async function processPDF() {
 
   const file = fileInput.files[0];
   const arrayBuffer = await file.arrayBuffer();
+  currentPdfData = arrayBuffer;
   pyodide.FS.writeFile("input.pdf", new Uint8Array(arrayBuffer));
 
   status.textContent = "⚙️ Обработка файла...";
@@ -76,7 +79,6 @@ async function processPDF() {
   downloadsTable.innerHTML = "";
   const pageCount = pyodide.runPython("len(reader.pages)");
 
-  // Подготовка ZIP-файла
   zipButton.style.display = "inline-block";
   zipButton.onclick = async () => {
     const zip = new JSZip();
@@ -93,7 +95,6 @@ async function processPDF() {
     URL.revokeObjectURL(url);
   };
 
-  // Генерация таблицы ссылок
   const columns = 7;
   const rows = Math.ceil(pageCount / columns);
   for (let row = 0; row < rows; row++) {
@@ -110,6 +111,11 @@ async function processPDF() {
         link.href = url;
         link.download = `page_${pageNum}.pdf`;
         link.textContent = `📄 Скачать page_${pageNum}.pdf`;
+
+        link.addEventListener("mouseenter", e => showPreview(pageNum, e));
+        link.addEventListener("mousemove", e => movePreview(e));
+        link.addEventListener("mouseleave", hidePreview);
+
         td.appendChild(link);
       }
       tr.appendChild(td);
@@ -119,4 +125,33 @@ async function processPDF() {
 
   updateProgress(100);
   status.textContent = `✅ Готово! Разбито на ${pageCount} страниц.`;
+}
+
+function showPreview(pageNumber, event) {
+  const loadingTask = pdfjsLib.getDocument({ data: currentPdfData });
+  loadingTask.promise.then(pdf => {
+    pdf.getPage(pageNumber).then(page => {
+      const viewport = page.getViewport({ scale: 0.5 });
+      const context = previewCanvas.getContext("2d");
+      previewCanvas.height = viewport.height;
+      previewCanvas.width = viewport.width;
+
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport
+      };
+      page.render(renderContext);
+      previewContainer.style.display = "block";
+      movePreview(event);
+    });
+  });
+}
+
+function movePreview(event) {
+  previewContainer.style.top = (event.clientY + 20) + "px";
+  previewContainer.style.left = (event.clientX + 20) + "px";
+}
+
+function hidePreview() {
+  previewContainer.style.display = "none";
 }
