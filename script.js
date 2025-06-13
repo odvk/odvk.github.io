@@ -1,30 +1,41 @@
 let pyodide = null;
 
 async function loadPyodideAndPackages() {
-  document.getElementById("status").textContent = "🔄 Загружается Pyodide...";
-  pyodide = await loadPyodide();
-  await pyodide.loadPackage("micropip");
-  await pyodide.runPythonAsync(`
-    import micropip
-    await micropip.install("PyPDF2")
-  `);
-  document.getElementById("status").textContent = "✅ Pyodide загружен.";
+  const status = document.getElementById("status");
+  const button = document.getElementById("split-button");
+
+  try {
+    pyodide = await loadPyodide();
+    await pyodide.loadPackage("micropip");
+    await pyodide.runPythonAsync(`
+      import micropip
+      await micropip.install("PyPDF2")
+    `);
+
+    status.textContent = "✅ Готово! Загрузите PDF для обработки";
+    button.disabled = false;
+  } catch (err) {
+    status.textContent = "❌ Ошибка при загрузке инструментов.";
+    console.error(err);
+  }
 }
 
 loadPyodideAndPackages();
 
 async function processPDF() {
   const input = document.getElementById("file-input");
+  const status = document.getElementById("status");
+
   if (!input.files.length) {
-    alert("Выберите PDF-файл!");
+    alert("Пожалуйста, выберите PDF-файл.");
     return;
   }
 
   const file = input.files[0];
   const arrayBuffer = await file.arrayBuffer();
-
   pyodide.FS.writeFile("input.pdf", new Uint8Array(arrayBuffer));
-  document.getElementById("status").textContent = "⚙️ Обрабатываем PDF...";
+
+  status.textContent = "⚙️ Обработка файла...";
 
   await pyodide.runPythonAsync(`
     from PyPDF2 import PdfReader, PdfWriter
@@ -39,14 +50,15 @@ async function processPDF() {
             writer.write(f)
   `);
 
-  // Отображение ссылок на страницы
   const downloads = document.getElementById("downloads");
   downloads.innerHTML = "";
-  const n = pyodide.runPython("len(reader.pages)");
-  for (let i = 1; i <= n; i++) {
+  const pageCount = pyodide.runPython("len(reader.pages)");
+
+  for (let i = 1; i <= pageCount; i++) {
     const data = pyodide.FS.readFile(`pages/page_${i}.pdf`);
     const blob = new Blob([data], { type: "application/pdf" });
     const url = URL.createObjectURL(blob);
+
     const link = document.createElement("a");
     link.href = url;
     link.download = `page_${i}.pdf`;
@@ -55,5 +67,5 @@ async function processPDF() {
     downloads.appendChild(link);
   }
 
-  document.getElementById("status").textContent = `✅ Готово: ${n} страниц`;
+  status.textContent = `✅ Готово! ${pageCount} страниц доступны для скачивания.`;
 }
