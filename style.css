@@ -40,11 +40,12 @@ button:disabled {
 #progress-bar-container {
   width: 80%;
   max-width: 600px;
-  margin: auto;
+  margin: 1em auto;
   background: #ddd;
   border-radius: 5px;
   overflow: hidden;
   height: 10px;
+  display: none;
 }
 
 #progress-bar {
