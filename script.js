@@ -147,7 +147,7 @@ function showPreview(pageNumber, event) {
   }
 
   currentPdfDoc.getPage(pageNumber).then(page => {
-    const viewport = page.getViewport({ scale: 2.0 });
+    const viewport = page.getViewport({ scale: 2.5 });
     const context = previewCanvas.getContext("2d");
     previewCanvas.height = viewport.height;
     previewCanvas.width = viewport.width;
