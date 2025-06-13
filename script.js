@@ -1,3 +1,4 @@
+// script.js
 let pyodide = null;
 
 const status = document.getElementById("status");
@@ -6,8 +7,8 @@ const fileInput = document.getElementById("file-input");
 const fileInfo = document.getElementById("file-info");
 const progressBar = document.getElementById("progress-bar");
 const progressBarContainer = document.getElementById("progress-bar-container");
-const downloads = document.getElementById("downloads");
 const zipButton = document.getElementById("download-zip");
+const downloadsTable = document.getElementById("downloads-table");
 
 fileInput.addEventListener("change", () => {
   const file = fileInput.files[0];
@@ -72,12 +73,10 @@ async function processPDF() {
   `);
 
   updateProgress(90);
-
-  downloads.querySelectorAll("a").forEach(a => a.remove()); // очистить старые ссылки
-
+  downloadsTable.innerHTML = "";
   const pageCount = pyodide.runPython("len(reader.pages)");
 
-  // Показать ZIP-кнопку и задать обработчик
+  // Подготовка ZIP-файла
   zipButton.style.display = "inline-block";
   zipButton.onclick = async () => {
     const zip = new JSZip();
@@ -94,18 +93,28 @@ async function processPDF() {
     URL.revokeObjectURL(url);
   };
 
-  // Ссылки на страницы
-  for (let i = 1; i <= pageCount; i++) {
-    const data = pyodide.FS.readFile(`pages/page_${i}.pdf`);
-    const blob = new Blob([data], { type: "application/pdf" });
-    const url = URL.createObjectURL(blob);
+  // Генерация таблицы ссылок
+  const columns = 7;
+  const rows = Math.ceil(pageCount / columns);
+  for (let row = 0; row < rows; row++) {
+    const tr = document.createElement("tr");
+    for (let col = 0; col < columns; col++) {
+      const pageNum = row + col * rows + 1;
+      const td = document.createElement("td");
+      if (pageNum <= pageCount) {
+        const data = pyodide.FS.readFile(`pages/page_${pageNum}.pdf`);
+        const blob = new Blob([data], { type: "application/pdf" });
+        const url = URL.createObjectURL(blob);
 
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `page_${i}.pdf`;
-    link.textContent = `📥 Скачать page_${i}.pdf`;
-    link.style.display = "block";
-    downloads.appendChild(link);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `page_${pageNum}.pdf`;
+        link.textContent = `📄 Скачать page_${pageNum}.pdf`;
+        td.appendChild(link);
+      }
+      tr.appendChild(td);
+    }
+    downloadsTable.appendChild(tr);
   }
 
   updateProgress(100);
