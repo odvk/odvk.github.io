@@ -28,15 +28,6 @@ button:disabled {
   cursor: not-allowed;
 }
 
-#downloads a {
-  display: block;
-  margin: 5px auto;
-  word-wrap: break-word;
-  white-space: normal;
-  font-size: 0.95em;
-  max-width: 90%;
-}
-
 #progress-bar-container {
   width: 80%;
   max-width: 600px;
@@ -53,4 +44,36 @@ button:disabled {
   width: 0%;
   background: #4CAF50;
   transition: width 0.3s ease;
+}
+
+#downloads {
+  max-width: 90%;
+  margin: 1em auto;
+}
+
+#downloads-table-wrapper {
+  max-height: 500px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fdfdfd;
+  padding: 1em;
+}
+
+#downloads-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+#downloads-table td {
+  padding: 0.3em 0.5em;
+  text-align: left;
+  word-break: break-word;
+  font-size: 0.9em;
+}
+
+#downloads-table a {
+  text-decoration: none;
+  color: #1a0dab;
 }
