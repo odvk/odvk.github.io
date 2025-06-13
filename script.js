@@ -161,9 +161,18 @@ function showPreview(pageNumber, event) {
 }
 
 function movePreview(event) {
-  previewContainer.style.top = (event.clientY + 20) + "px";
-  previewContainer.style.left = (event.clientX + 20) + "px";
+  const previewHeight = previewContainer.offsetHeight || 300;
+  const padding = 20;
+
+  // Вычисляем позицию по вертикали
+  const top = (event.clientY + padding + previewHeight > window.innerHeight)
+    ? event.clientY - previewHeight - padding
+    : event.clientY + padding;
+
+  previewContainer.style.top = `${top}px`;
+  previewContainer.style.left = `${event.clientX + padding}px`;
 }
+
 
 function hidePreview() {
   if (previewTask) {
